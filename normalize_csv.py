@@ -6,22 +6,36 @@ The function opens the input file, reads it line by line, and writes the output 
 separator with a comma, and surrounding any fields that contain a comma with double quotes.
 It also replaces any double quotes in the input fields with two double quotes, which is the correct way to escape
 double quotes in a CSV file.
+
+BONUS 1:
+    Add in the ability to accept command line parameters for:
+        the input delimiter to use ('|' should be the default)
+        the quote character to use (" by default)
 """
+import argparse
 import csv
+import sys
 
 
-def normalize_csv(input_file, output_file):
+def normalize_csv(input_file, output_file, delimiter, quotechar):
     with open(input_file, 'r') as input_csv, open(output_file, 'w', newline='') as output_csv:
-        reader = csv.reader(input_csv, delimiter='|')
-        writer = csv.writer(output_csv)
+        reader = csv.reader(input_csv, delimiter=delimiter)
+        writer = csv.writer(output_csv, delimiter=',', quotechar=quotechar, quoting=csv.QUOTE_MINIMAL)
 
         for row in reader:
-            for i in range(len(row)):
-                if ',' in row[i]:
-                    row[i] = f'"{row[i]}"'
-                elif '"' in row[i]:
-                    row[i] = row[i].replace('"', '""')
             writer.writerow(row)
 
 
-normalize_csv('pipes.csv', 'pipes_normalized.csv')
+def main(args):
+    parser = argparse.ArgumentParser()
+    parser.add_argument('input_file', type=str)
+    parser.add_argument('output_file', type=str)
+    parser.add_argument('--delimiter', type=str, default='|')
+    parser.add_argument('--quotechar', type=str, default='"')
+    args = parser.parse_args(args)
+
+    normalize_csv(args.input_file, args.output_file, args.delimiter, args.quotechar)
+
+
+if __name__ == '__main__':
+    main(sys.argv[1:])
