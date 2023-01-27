@@ -38,6 +38,9 @@ def main():
 
     args = parser.parse_args()
 
+    if args.num_rows <= 0:
+        raise ValueError("argument num_rows must be a positive integer")
+
     with open(args.filename, mode='w', newline='') as csv_file:
         writer = csv.writer(csv_file)
         writer.writerow(('id', 'random_string'))
