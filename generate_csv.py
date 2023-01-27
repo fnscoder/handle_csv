@@ -31,13 +31,18 @@ def generate_rows(num_rows):
         yield (random.randint(1000, 9999), random_string)
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument('num_rows', type=int, help='Number of rows to generate')
-parser.add_argument('filename', type=str, help='Name of the CSV file to generate')
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('num_rows', type=int, help='Number of rows to generate')
+    parser.add_argument('filename', type=str, help='Name of the CSV file to generate')
 
-args = parser.parse_args()
+    args = parser.parse_args()
 
-with open(args.filename, mode='w', newline='') as csv_file:
-    writer = csv.writer(csv_file)
-    writer.writerow(('id', 'random_string'))
-    writer.writerows(generate_rows(args.num_rows))
+    with open(args.filename, mode='w', newline='') as csv_file:
+        writer = csv.writer(csv_file)
+        writer.writerow(('id', 'random_string'))
+        writer.writerows(generate_rows(args.num_rows))
+
+
+if __name__ == '__main__':
+    main()
